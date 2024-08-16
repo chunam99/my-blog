@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { AuthContext } from "@/contexts/AuthContext";
 import Theme from "@/models/Theme";
-import { search, update } from "@/services/Service";
+import { search, update } from "@/services/FakeApiService";
 import { Check, Edit2Icon } from "lucide-react";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

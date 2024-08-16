@@ -1,5 +1,5 @@
 import User from "@/models/User";
-import { registerUser } from "@/services/Service";
+import { registerUser } from "@/services/FakeApiService";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 

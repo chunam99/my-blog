@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Post from "@/models/Post";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/contexts/AuthContext";
-import { search } from "@/services/Service";
+import { search } from "@/services/FakeApiService";
 import PostCard from "./PostCard";
 import { PostModalForm } from "./PostModalForm";
 import { Plus } from "lucide-react";
@@ -13,14 +13,14 @@ function CardList() {
   const navigate = useNavigate();
 
   const { user, handleLogout } = useContext(AuthContext);
-  const token = user.token;
+  const token = user?.token || "";
 
   useEffect(() => {
     if (token === "") {
       alert("You need to be logged in");
       navigate("/");
     }
-  }, [token]);
+  }, [token, navigate]);
 
   async function fetchPosts() {
     try {
@@ -33,13 +33,15 @@ function CardList() {
       if (error instanceof Error && error.toString().includes("403")) {
         alert("Token expired, please log in again");
         handleLogout();
+      } else {
+        setPosts([]);
       }
     }
   }
 
   useEffect(() => {
     fetchPosts();
-  }, [posts.length]);
+  }, []);
 
   return (
     <section className="max-w-[1000px] mx-auto py-8 px-8">
@@ -51,9 +53,11 @@ function CardList() {
       </div>
 
       <div id="posts" className="flex gap-3 flex-wrap">
-        {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
+        {posts ? (
+          posts.map((post) => <PostCard key={post.id} post={post} />)
+        ) : (
+          <p>No posts available</p>
+        )}
       </div>
     </section>
   );

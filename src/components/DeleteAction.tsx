@@ -14,7 +14,7 @@ import {
 
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import { deleteItems } from "@/services/Service";
+import { deleteItems } from "@/services/FakeApiService";
 import Theme from "@/models/Theme";
 import Post from "@/models/Post";
 

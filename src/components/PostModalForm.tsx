@@ -8,7 +8,7 @@ import {
 import { AuthContext } from "@/contexts/AuthContext";
 import Post from "@/models/Post";
 import Theme from "@/models/Theme";
-import { register, search, update } from "@/services/Service";
+import { register, search, update } from "@/services/FakeApiService";
 import { LucideIcon } from "lucide-react";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -75,7 +75,6 @@ export function PostModalForm({ icon: Icon, postID }: PostModalFormProps) {
     searchThemes();
     if (id !== undefined) {
       searchPostByID(id);
-      console.log(theme);
     }
   }, [id]);
 
@@ -95,45 +94,45 @@ export function PostModalForm({ icon: Icon, postID }: PostModalFormProps) {
     });
   }
 
-  async function generateNewPost(e: ChangeEvent<HTMLFormElement>) {
-    e.preventDefault();
+  // async function generateNewPost(e: ChangeEvent<HTMLFormElement>) {
+  //   e.preventDefault();
 
-    console.log({ post });
+  //   console.log({ post });
 
-    if (id != undefined) {
-      try {
-        await update(`/posts`, post, setPost, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        alert("Post updated successfully");
-      } catch (error: unknown) {
-        if (error instanceof Error && error.toString().includes("403")) {
-          alert("Token expired, please log in again");
-          handleLogout();
-        } else {
-          alert("Error updating the post");
-        }
-      }
-    } else {
-      try {
-        await register(`/posts`, post, setPost, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        alert("Post created successfully");
-      } catch (error: unknown) {
-        if (error instanceof Error && error.toString().includes("403")) {
-          alert("Token expired, please log in again");
-          handleLogout();
-        } else {
-          alert("Error creating the post");
-        }
-      }
-    }
-  }
+  //   if (id != undefined) {
+  //     try {
+  //       await update(`/posts`, post, setPost, {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       });
+  //       alert("Post updated successfully");
+  //     } catch (error: unknown) {
+  //       if (error instanceof Error && error.toString().includes("403")) {
+  //         alert("Token expired, please log in again");
+  //         handleLogout();
+  //       } else {
+  //         alert("Error updating the post");
+  //       }
+  //     }
+  //   } else {
+  //     try {
+  //       await register(`/posts`, post, setPost, {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       });
+  //       alert("Post created successfully");
+  //     } catch (error: unknown) {
+  //       if (error instanceof Error && error.toString().includes("403")) {
+  //         alert("Token expired, please log in again");
+  //         handleLogout();
+  //       } else {
+  //         alert("Error creating the post");
+  //       }
+  //     }
+  //   }
+  // }
 
   const loadingTheme = theme.description === "";
 
@@ -146,7 +145,7 @@ export function PostModalForm({ icon: Icon, postID }: PostModalFormProps) {
         <DialogHeader>
           <DialogTitle>Create your new post</DialogTitle>
         </DialogHeader>
-        <form onSubmit={generateNewPost} className="flex flex-col">
+        <form className="flex flex-col">
           <label htmlFor="">Title</label>
           <input
             type="text"
@@ -170,13 +169,18 @@ export function PostModalForm({ icon: Icon, postID }: PostModalFormProps) {
           <select
             onChange={(e) => searchThemeByID(e.currentTarget.value)}
             className="p-2 rounded-md bg-gray-800"
+            value={theme.id || ""}
           >
             <option value="">Select a theme</option>
-            {themes.map((theme) => (
-              <option key={theme.id} value={theme.id}>
-                {theme.description}
-              </option>
-            ))}
+            {themes && themes.length > 0 ? (
+              themes.map((theme) => (
+                <option key={theme.id} value={theme.id}>
+                  {theme.description}
+                </option>
+              ))
+            ) : (
+              <option disabled>Loading themes...</option>
+            )}
           </select>
 
           <button

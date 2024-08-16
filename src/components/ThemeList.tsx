@@ -5,7 +5,7 @@ import ThemeCard from "./ThemeItem";
 
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/contexts/AuthContext";
-import { search } from "@/services/Service";
+import { search } from "@/services/FakeApiService";
 import { useContext, useEffect, useState } from "react";
 
 export default function ThemeList() {
@@ -25,7 +25,7 @@ export default function ThemeList() {
   useEffect(() => {
     async function searchThemes() {
       try {
-        await search("/temas", setThemes, {
+        await search("/theme", setThemes, {
           headers: { Authorization: token },
         });
       } catch (error: unknown) {
